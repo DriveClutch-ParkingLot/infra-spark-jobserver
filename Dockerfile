@@ -39,4 +39,4 @@ COPY app/docker.sh app/settings.sh
 
 ENV SPARK_HOME="/opt/spark"
 
-ENTRYPOINT ["app\/server_start.sh"]Sang-MBP-3:spark-jobserver sang$ cp ./target/docker/Dockerfile ~/Desktop/temp/
+ENTRYPOINT ["app\/server_start.sh"]
