@@ -45,13 +45,14 @@ RUN ./dev/change-scala-version.sh 2.11
 RUN ./make-distribution.sh  --name spark-1.6.2-hadoop-2.6.2-scala-2.11 --mvn /opt/apache-maven-3.3.9/bin/mvn -Phadoop-2.6 -Dhadoop.version=2.6.2 -Dscala-2.11 -Phive
 
 WORKDIR /opt/
-RUN mv spark-1.6.2/dist /spark && \
+RUN mv spark-1.6.2/dist spark && \
 rm spark-1.6.2.tgz && \
 rm -r spark-1.6.2
 VOLUME ["\/database"]
 
-RUN mkdir /spark/app
+RUN mkdir spark/app
 WORKDIR spark
+COPY app/spark-job-server.jar app/spark-job-server.jar
 COPY app/server_start.sh app/server_start.sh
 COPY app/server_stop.sh app/server_stop.sh
 COPY app/manager_start.sh app/manager_start.sh
@@ -60,6 +61,6 @@ COPY app/log4j-stdout.properties app/log4j-server.properties
 COPY app/docker.conf app/docker.conf
 COPY app/docker.sh app/settings.sh
 
-ENV SPARK_HOME="/spark"
+ENV SPARK_HOME="/opt/spark"
 
-ENTRYPOINT ["app\/server_start.sh"]
+ENTRYPOINT ["/opt/spark/app/server_start.sh"]
