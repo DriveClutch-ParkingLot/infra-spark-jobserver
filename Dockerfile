@@ -61,6 +61,10 @@ COPY app/log4j-stdout.properties app/log4j-server.properties
 COPY app/docker.conf app/docker.conf
 COPY app/docker.sh app/settings.sh
 
+COPY lib/datanucleus-api-jdo-3.2.6.jar /opt/spark/lib/datanucleus-api-jdo-3.2.6.jar
+COPY lib/datanucleus-core-3.2.10.jar /opt/spark/lib/datanucleus-core-3.2.10.jar
+COPY lib/datanucleus-rdbms-3.2.9.jar /opt/spark/lib/datanucleus-rdbms-3.2.9.jar
+
 ENV SPARK_HOME="/opt/spark"
 
 ENTRYPOINT ["/opt/spark/app/server_start.sh"]
