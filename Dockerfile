@@ -21,6 +21,7 @@ RUN git clone --branch $SPARK_JOBSERVER_BRANCH https://github.com/sangv/spark-jo
 RUN mkdir -p $SPARK_JOBSERVER_APP_HOME
 
 WORKDIR /opt
+
 RUN wget http://dl.bintray.com/sbt/native-packages/sbt/0.13.11/sbt-0.13.11.tgz && \
 tar zxvf sbt-0.13.11.tgz
 ENV PATH="/opt/sbt/bin/:$PATH"
