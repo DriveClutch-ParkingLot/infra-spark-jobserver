@@ -6,6 +6,7 @@ USER root
 WORKDIR /
 
 RUN apk update && apk upgrade && \
+apk add ca-certificates wget && update-ca-certificates && \
 apk add curl git
 
 ENV SBT_VERSION 0.13.11
@@ -17,38 +18,35 @@ ENV SPARK_DOWNLOAD_URL http://d3kbcqa49mib13.cloudfront.net/$SPARK_VERSION_STRIN
 
 ENV SPARK_JOBSERVER_BUILD_HOME /spark-jobserver
 ENV SPARK_JOBSERVER_APP_HOME /app
-RUN git clone --branch $SPARK_JOBSERVER_BRANCH https://github.com/sangv/spark-jobserver.git
 RUN mkdir -p $SPARK_JOBSERVER_APP_HOME
 
 WORKDIR /opt
+
+RUN wget --progress=bar https://github.com/DriveClutch/spark/releases/download/v1.6.2-scala2.11/spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz && \
+tar zxvf spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz && \
+pwd && \
+ls -al && \
+mv spark-1.6.2-bin-spark-1.6.2-hadoop-2.6.2-scala-2.11 spark && \
+rm spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz
 
 RUN wget http://dl.bintray.com/sbt/native-packages/sbt/0.13.11/sbt-0.13.11.tgz && \
 tar zxvf sbt-0.13.11.tgz
 ENV PATH="/opt/sbt/bin/:$PATH"
 
 # Build Spark-Jobserver
-WORKDIR $SPARK_JOBSERVER_BUILD_HOME
-RUN bin/server_deploy.sh docker && \
-    cd / && \
-    rm -rf -- $SPARK_JOBSERVER_BUILD_HOME
+#RUN git clone --branch $SPARK_JOBSERVER_BRANCH https://github.com/sangv/spark-jobserver.git
+#WORKDIR $SPARK_JOBSERVER_BUILD_HOME
+#RUN bin/server_deploy.sh docker && \
+#    cd / && \
+#    rm -rf -- $SPARK_JOBSERVER_BUILD_HOME
 
-WORKDIR /opt/
-RUN wget http://mirror.stjschools.org/public/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz && \
-tar zxvf apache-maven-3.3.9-bin.tar.gz
-RUN export PATH="/opt/apache-maven-3.3.9/bin:$PATH"
+WORKDIR /opt
+#RUN wget http://mirror.stjschools.org/public/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz && \
+#tar zxvf apache-maven-3.3.9-bin.tar.gz
+#RUN export PATH="/opt/apache-maven-3.3.9/bin:$PATH"
+
 ENV JOBSERVER_MEMORY="2G"
-
 RUN ["mkdir", "-p", "\/database"]
-RUN wget http://d3kbcqa49mib13.cloudfront.net/spark-1.6.2.tgz && \
-tar zxvf spark-1.6.2.tgz
-WORKDIR spark-1.6.2
-RUN ./dev/change-scala-version.sh 2.11
-RUN ./make-distribution.sh  --name spark-1.6.2-hadoop-2.6.2-scala-2.11 --mvn /opt/apache-maven-3.3.9/bin/mvn -Phadoop-2.6 -Dhadoop.version=2.6.2 -Dscala-2.11 -Phive
-
-WORKDIR /opt/
-RUN mv spark-1.6.2/dist spark && \
-rm spark-1.6.2.tgz && \
-rm -r spark-1.6.2
 VOLUME ["\/database"]
 
 RUN mkdir spark/app
