@@ -22,12 +22,10 @@ RUN mkdir -p $SPARK_JOBSERVER_APP_HOME
 
 WORKDIR /opt
 
-RUN wget --progress=bar https://github.com/DriveClutch/spark/releases/download/v1.6.2-scala2.11/spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz && \
-tar zxvf spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz && \
-pwd && \
-ls -al && \
-mv spark-1.6.2-bin-spark-1.6.2-hadoop-2.6.2-scala-2.11 spark && \
-rm spark-1.6.2-hadoop-2.6.2-scala-2.11.tgz
+RUN wget --progress=bar https://github.com/DriveClutch/spark/releases/download/v1.6.2-scala2.11/spark-1.6.2-bin-hadoop-2.6.2-scala-2.11.tgz && \
+tar zxvf spark-1.6.2-bin-hadoop-2.6.2-scala-2.11.tgz && \
+mv spark-1.6.2-bin-hadoop-2.6.2-scala-2.11 spark && \
+rm spark-1.6.2-bin-hadoop-2.6.2-scala-2.11.tgz
 
 RUN wget http://dl.bintray.com/sbt/native-packages/sbt/0.13.11/sbt-0.13.11.tgz && \
 tar zxvf sbt-0.13.11.tgz
